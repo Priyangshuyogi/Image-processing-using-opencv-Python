@@ -1,0 +1,22 @@
+import cv2
+import glob
+
+path = "/home/Downloads/images/*.jpg"
+for bb,file in enumerate (glob.glob(path)):
+    print(bb,file)
+    img= cv2.imread(file)
+    
+    /////////////Image ooperations/////////////////
+    
+    lab = cv2.cvtColor(img, cv2.COLOR_LRGB2LAB)
+    lab_planes = cv2.split(lab)
+    clahe = cv2.createCLAHE(clipLimit=2.0,tileGridSize=(255,255))
+    lab_planes[0] = clahe.apply(lab_planes[0])
+    lab = cv2.merge(lab_planes)
+    retval, threshold = cv2.threshold(lab, 160, 255, cv2.THRESH_BINARY)
+    grayscaled = cv2.cvtColor(threshold, cv2.COLOR_BGR2GRAY)
+    
+    
+    cv2.imwrite('/home/Downloads/images2/sample{}.jpg'.format(bb), grayscaled)
+    k = cv2.waitKey(1000)
+    cv2.destroyAllWindows()
